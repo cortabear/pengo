@@ -1,0 +1,3 @@
+// @version=5
+indicator("plotbar example", overlay=true)
+plotbar(open, high, low, close, title='Title', color = open < close ? color.green : color.red)

@@ -1,0 +1,23 @@
+// Has market price moved 3 ticks above the open price?
+// Has market price moved 3 ticks below the open price?
+
+
+//@version=4
+study("Highest Price from Midnight to 4AM", overlay=true)
+
+startHour = input(0, title="Start Hour (0-23)", type=input.integer)
+startMinute = input(0, title="Start Minute (0-59)", type=input.integer)
+endHour = input(4, title="End Hour (0-23)", type=input.integer)
+endMinute = input(0, title="End Minute (0-59)", type=input.integer)
+
+var highestPrice = na
+
+// Check if the current timestamp falls within the target time range
+isWithinTimeRange = (hour >= startHour and minute >= startMinute) and (hour < endHour or (hour == endHour and minute <= endMinute))
+
+// If the current timestamp is within the time range, update the highest price
+if isWithinTimeRange
+    highestPrice := na(highestPrice) ? high : max(high, highestPrice)
+
+// Plot the highest price line
+plot(highestPrice, title="Highest Price", color=color.blue, linewidth=2)

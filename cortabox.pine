@@ -1,0 +1,47 @@
+// This indicator is owned by Corta Bear Capital. This code is provided for educational and non-commercial use only. It should not be distributed for monetary purposes without explicit permission from Corta Bear Capital. All rights reserved. 
+
+// @version=5
+
+indicator("CB BOX", shorttitle="cb.box", overlay = true)
+
+// Default Values
+colorBase95 = color.rgb(76, 127, 181, 96)
+colorHigh = color.rgb(76, 127, 181, 88)
+colorLow = color.rgb(153, 43, 33, 75)
+
+overNightPostMarket = "0000-0400" // Midnight to 4AM. 2nd half of the overnight session.
+preMarket = "0400-0930" // 4AM to 9:30AM. Pre market session.
+openMarket = "0930-1600" // 9:30AM to 4PM. Open market seesion.
+postMarket = "1600-1800" // 4PM to 6PM. Post market session.
+overNightPreMarket = "1800-2359" // 6PM to 11:59PM. 1st half of the overnight session.
+
+pricePadding = 0.16 // Ticks counted above and below specific price markers.
+marketOpen = 121 // The opening price at the beginning open market trading session.
+marketPadHigh = 123 // marketOpen + pricePadding // Ticks above the market open.
+marketPadLow = 119 // marketOpen - pricePadding // Ticks below the market open
+marketPadHighHLine = hline( marketPadHigh, title="Above Market Open", color=colorHigh, linestyle=hline.style_dotted, linewidth=2 ) // Horizontal line for price above market open.
+marketPadLowHLine = hline( marketPadLow, title="Below Market Open", color=colorLow, linestyle=hline.style_dotted, linewidth=2 ) // Horizontal line for price below market open.
+
+overNightHigh = 121 // The highest price during the overnight trading session.
+overNightLow = 120 // The lowest price during the overnight trading session.
+overNightHighHLine = hline(overNightHigh, title="Overnight High", color=colorHigh, linestyle=hline.style_solid, linewidth=1 ) // Horizontal line for overnight high
+overNightLowHLine = hline( overNightLow, title="Overnight Low", color=colorLow, linestyle=hline.style_solid, linewidth=1 ) // Horizontal line for overnight low
+
+timeInRange(tf, session) =>
+    time(tf, session) != 0
+
+sessionColor = if timeframe.isseconds or timeframe.isintraday
+    switch
+        timeInRange(timeframe.period, overNightPostMarket) => colorBase95
+        timeInRange(timeframe.period, preMarket) => color.rgb(76, 127, 181, 92)
+        timeInRange(timeframe.period, openMarket) => color.rgb(76, 127, 181, 90)
+        timeInRange(timeframe.period, postMarket) => colorHigh
+        timeInRange(timeframe.period, overNightPreMarket) => colorBase95
+        => color(na)
+
+bgcolor(sessionColor)
+
+fill( overNightHighHLine, overNightLowHLine, color = colorBase95 )
+fill( marketPadHighHLine, marketPadLowHLine, color = colorBase95 )
+
+plot(121, title="Market Open Price", color=color.rgb(19, 80, 120), linewidth=1)

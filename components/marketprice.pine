@@ -1,0 +1,15 @@
+// Within a timeframe specified plot a line for the highest & lowest price.
+
+// @version=5
+indicator("Corta Bear Open Market", shorttitle="cbx.open.market", overlay = true)
+
+pricePadding = 16 // Ticks counted above and below specific price markers.
+marketOpen = 121 // The opening price at the beginning open market trading session.
+marketPadHigh = marketOpen + pricePadding // Ticks above the market open.
+marketPadLow = marketOpen - pricePadding // Ticks below the market open
+marketPadHighHLine = hline( marketPadHigh, title="Above Market Open", color=color.green, linestyle=hline.style_solid, linewidth=1 ) // Horizontal line for price above market open.
+marketPadLowHLine = hline( marketPadLow, title="Below Market Open", color=color.red, linestyle=hline.style_solid, linewidth=1 ) // Horizontal line for price below market open.
+
+fill( marketPadHighHLine, marketPadLowHLine, color = color.rgb(76, 127, 181, 95) )
+
+plot(121, title="Market Open Price", color=color.rgb(76, 127, 181, 95), linewidth=1 style=plot.style_line)
