@@ -54,22 +54,56 @@ for i = 1 to 3
 ```
 
 #### IF [ SHOW GAPS ], [RE-ENTER GAP] and BULLISH/BEARISH GAP  
-```js
+```js  
+
 if bullishGap
     // Bullish gap zone
-    box.new(left=bar_index[2], top=cHigh, right=bar_index[0], bottom=aLow, border_color=color.green, bgcolor=color.new(color.green, 90), border_width=1)
+    box.new(
+        left=bar_index[2],
+        top=cHigh, 
+        right=bar_index[0], 
+        bottom=aLow, 
+        border_color=color.green, 
+        bgcolor=color.new(color.green, 90), 
+        border_width=1
+    )
 
 if bearishGap
     // Bearish gap zone
-    box.new(left=bar_index[2], top=aHigh, right=bar_index[0], bottom=cLow, border_color=color.red, bgcolor=color.new(color.red, 90), border_width=1)
+    box.new(
+        left=bar_index[2], 
+        top=aHigh, 
+        right=bar_index[0], 
+        bottom=cLow, 
+        border_color=color.red, 
+        bgcolor=color.new(color.red, 90), 
+        border_width=1
+    )  
+
 ```
 
 #### IF [ HIGHLIGHT ENTRIES ]  
-```js
+```js  
+
 if bullishGap and close < aLow and close > cHigh
-    label.new(bar_index, close, text="Entry", style=label.style_label_down, color=color.green, textcolor=color.white, size=size.large)
+    label.new(
+        bar_index, 
+        close, 
+        text="Entry", 
+        style=label.style_label_down, 
+        color=color.green, 
+    )
 
 if bearishGap and close > aHigh and close < cLow
-    label.new(bar_index, close, text="Entry", style=label.style_label_up, color=color.red, textcolor=color.white, size=size.large)
+    label.new(
+        bar_index, 
+        close, 
+        text="Entry", 
+        style=label.style_label_up, 
+        color=color.red, 
+        textcolor=color.white, 
+        size=size.large
+    )  
+
 ```
 
