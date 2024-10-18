@@ -1,0 +1,48 @@
+//@version=5
+indicator("CORTA.BOX v.1.0.4", overlay=true)
+
+// Parameters for customization
+gapSizeTicks = input.int(2, title="Minimum Gap Size (Ticks)", minval=1)
+showGaps = input.bool(true, title="Show Gap Zones")
+highlightEntries = input.bool(true, title="Highlight Potential Entries")
+
+// Helper function to calculate ticks
+tickSize = syminfo.mintick
+
+// Variables to store three-bar pattern
+var float aHigh = na
+var float aLow = na
+var float bHigh = na
+var float bLow = na
+var float cHigh = na
+var float cLow = na
+
+// Iterate over the bars
+if bar_index >= 2
+    aHigh := high[2]
+    aLow := low[2]
+    bHigh := high[1]
+    bLow := low[1]
+    cHigh := high
+    cLow := low
+
+    // Check if the gap condition is met
+    bullishGap = (aLow > cHigh) and (aLow - cHigh) >= gapSizeTicks * tickSize
+    bearishGap = (aHigh < cLow) and (cLow - aHigh) >= gapSizeTicks * tickSize
+
+    // Mark gap zones if found
+    if showGaps and (bullishGap or bearishGap)
+        if bullishGap
+            // Bullish gap zone
+            box.new(left=bar_index[2], top=cHigh, right=bar_index[0], bottom=aLow, border_color=color.green, bgcolor=color.new(color.green, 90), border_width=2)
+
+        if bearishGap
+            // Bearish gap zone
+            box.new(left=bar_index[2], top=aHigh, right=bar_index[0], bottom=cLow, border_color=color.red, bgcolor=color.new(color.red, 90), border_width=2)
+
+    // Check if the price enters the gap zone (potential entry)
+    if highlightEntries
+        if bullishGap and close < aLow and close > cHigh
+            label.new(bar_index, close, text="Entry", style=label.style_label_down, color=color.green, textcolor=color.white, size=size.large)
+        if bearishGap and close > aHigh and close < cLow
+            label.new(bar_index, close, text="Entry", style=label.style_label_up, color=color.red, textcolor=color.white, size=size.large)
