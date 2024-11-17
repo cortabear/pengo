@@ -1,23 +1,28 @@
 //@version=5
-indicator("CORTA.BOX v.1.0.4", overlay=true)
+indicator("PENGO v.1.0.1", overlay=true)
 
-// Parameters for customization
-gapSizeTicks = input.int(2, title="Minimum Gap Size (Ticks)", minval=1)
-showGaps = input.bool(true, title="Show Gap Zones")
-highlightEntries = input.bool(true, title="Highlight Potential Entries")
+// Parameters
+pengoSize = input.int(2, title="Minimum Size (Ticks)", minval=1)
+showPengo = input.bool(true, title="Show Zones")
+pengoEntries = input.bool(true, title="Highlight Potential Entries")
 
-// Helper function to calculate ticks
+// Helpers
 tickSize = syminfo.mintick
 
-// Variables to store three-bar pattern
+// Variables
 var float aHigh = na
 var float aLow = na
 var float bHigh = na
 var float bLow = na
 var float cHigh = na
 var float cLow = na
+var borderPengo = 2
+var borderBullish = color.new(#FFFFFF, 0)
+var borderBearish = color.new(#FFFFFF, 0)
+var bckgrndBullish = color.new(#FFFFFF, 90)
+var bckgrndBearish = color.new(#FFFFFF, 90)
 
-// Iterate over the bars
+// Condition
 if bar_index >= 2
     aHigh := high[2]
     aLow := low[2]
@@ -27,21 +32,21 @@ if bar_index >= 2
     cLow := low
 
     // Check if the gap condition is met
-    bullishGap = (aLow > cHigh) and (aLow - cHigh) >= gapSizeTicks * tickSize
-    bearishGap = (aHigh < cLow) and (cLow - aHigh) >= gapSizeTicks * tickSize
+    bullishGap = (aLow > cHigh) and (aLow - cHigh) >= pengoSize * tickSize
+    bearishGap = (aHigh < cLow) and (cLow - aHigh) >= pengoSize * tickSize
 
     // Mark gap zones if found
-    if showGaps and (bullishGap or bearishGap)
+    if showPengo and (bullishGap or bearishGap)
         if bullishGap
             // Bullish gap zone
-            box.new(left=bar_index[2], top=cHigh, right=bar_index[0], bottom=aLow, border_color=color.green, bgcolor=color.new(color.green, 90), border_width=2)
+            box.new(left=bar_index[2], top=cHigh, right=bar_index[0], bottom=aLow, border_color=borderBullish, bgcolor=bckgrndBullish, border_width=borderPengo)
 
         if bearishGap
             // Bearish gap zone
-            box.new(left=bar_index[2], top=aHigh, right=bar_index[0], bottom=cLow, border_color=color.red, bgcolor=color.new(color.red, 90), border_width=2)
+            box.new(left=bar_index[2], top=aHigh, right=bar_index[0], bottom=cLow, border_color=borderBearish, bgcolor=bckgrndBearish, border_width=borderPengo)
 
     // Check if the price enters the gap zone (potential entry)
-    if highlightEntries
+    if pengoEntries
         if bullishGap and close < aLow and close > cHigh
             label.new(bar_index, close, text="Entry", style=label.style_label_down, color=color.green, textcolor=color.white, size=size.large)
         if bearishGap and close > aHigh and close < cLow
