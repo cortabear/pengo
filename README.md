@@ -1,5 +1,3 @@
-# PENGO v.1.0.1
-
 <div align="center">
   <img src="./assets/imgs/billboard.jpg" alt="PENGO v.1.0.1">   
   
